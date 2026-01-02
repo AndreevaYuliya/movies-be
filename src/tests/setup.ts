@@ -5,18 +5,20 @@ let mongo: MongoMemoryServer;
 
 beforeAll(async () => {
   mongo = await MongoMemoryServer.create();
+
   const uri = mongo.getUri();
+
   await mongoose.connect(uri);
 });
 
 afterEach(async () => {
-  // очистка коллекций между тестами
   const db = mongoose.connection.db;
   if (!db) {
     return;
   }
 
   const collections = await db.collections();
+
   for (const c of collections) await c.deleteMany({});
 });
 

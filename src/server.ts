@@ -11,10 +11,13 @@ const app = createApp();
   try {
     if (process.env.USE_IN_MEMORY_DB === 'true') {
       mongoServer = await MongoMemoryServer.create();
+
       await mongoose.connect(mongoServer.getUri());
+
       console.log('Connected to in-memory MongoDB');
     } else {
       await mongoose.connect(config.mongoUri);
+
       console.log(`Connected to MongoDB at ${config.mongoUri}`);
     }
 
@@ -23,11 +26,13 @@ const app = createApp();
     });
   } catch (err) {
     console.error('Failed to start server', err);
+
     process.exit(1);
   }
 
   const shutdown = async () => {
     await mongoose.disconnect();
+
     if (mongoServer) {
       await mongoServer.stop();
     }

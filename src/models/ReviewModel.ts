@@ -39,9 +39,12 @@ const reviewModel = new Schema<Review>(
       updatedAt: false,
     },
     versionKey: false,
-  }, // createdAt auto
+  },
 );
 
-reviewModel.index({ movieId: 1, createdAt: -1 });
+reviewModel.index({
+  movieId: 1,
+  createdAt: -1,
+});
 
 export const ReviewModel = mongoose.model<Review>('Review', reviewModel);

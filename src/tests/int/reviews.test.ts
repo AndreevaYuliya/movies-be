@@ -14,11 +14,17 @@ describe('Reviews endpoints (integration)', () => {
   const app = createApp();
 
   test('POST /api/reviews creates review and auto sets createdAt', async () => {
-    mockedGet.mockResolvedValueOnce({ status: 200, data: { id: 1 } } as any);
+    mockedGet.mockResolvedValueOnce({
+      status: 200,
+      data: { id: 1 },
+    } as any);
 
-    const res = await request(app)
-      .post('/api/reviews')
-      .send({ movieId: '2', author: 'Alice', comment: 'Nice', rating: 9 });
+    const res = await request(app).post('/api/reviews').send({
+      movieId: '2',
+      author: 'Alice',
+      comment: 'Nice',
+      rating: 9,
+    });
 
     expect(res.status).toBe(201);
     expect(res.body.movieId).toBe('2');
@@ -29,18 +35,22 @@ describe('Reviews endpoints (integration)', () => {
   });
 
   test('POST /api/reviews returns 400 if movie not found in Movies service', async () => {
-    mockedGet.mockRejectedValueOnce({ response: { status: 404 } } as any);
+    mockedGet.mockRejectedValueOnce({
+      response: { status: 404 },
+    } as any);
 
-    const res = await request(app)
-      .post('/api/reviews')
-      .send({ movieId: '999', author: 'Bob', comment: 'Nope', rating: 5 });
+    const res = await request(app).post('/api/reviews').send({
+      movieId: '999',
+      author: 'Bob',
+      comment: 'Nope',
+      rating: 5,
+    });
 
     expect(res.status).toBe(400);
     expect(res.body.message).toMatch(/Movie not found/i);
   });
 
   test('GET /api/reviews returns reviews sorted by createdAt desc', async () => {
-    // Seed two reviews with different timestamps to verify sorting
     await ReviewModel.create({
       movieId: '2',
       author: 'A',
@@ -48,6 +58,7 @@ describe('Reviews endpoints (integration)', () => {
       rating: 7,
       createdAt: new Date('2024-01-01T00:00:00Z'),
     });
+
     await ReviewModel.create({
       movieId: '2',
       author: 'B',

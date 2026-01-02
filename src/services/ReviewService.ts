@@ -33,6 +33,7 @@ export class ReviewService {
     ]);
 
     const counts: Record<string, number> = {};
+
     movieIds.forEach((id) => (counts[id] = 0));
 
     interface AggregationResult {
